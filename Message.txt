@@ -1,0 +1,84 @@
+package Message;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import Message.MD5;
+
+public class Message {
+	String textOfSender = "", temp = ""; //Переменная temp создана для проверки контрольной суммы
+	
+	int idSender, idReader;
+	
+	Date date = new Date();
+	
+	boolean sent, delivered, read; 
+	
+	boolean testOfControlSumBool = false;
+	
+	public Message()
+	{
+	}
+	
+	public void setDate() //Установка текунщего времени
+	{
+		SimpleDateFormat time = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+		System.out.println(time.format(date));
+	}
+	
+	public void sentText(String smth) //Метод получения текста
+	{
+		sent = true; //Сообщение отправлено
+		textOfSender = smth;
+		temp = smth;
+		if(textOfSender!="")
+			delivered = true; //Сообщение доставлено 
+	}
+	
+	public void setIdOfSender() //Установка Id отправителя, невозможно доработать без сервера
+	{
+		this.idSender = 0;
+	}
+	
+	public void setIdOfReader() //Установка id получателя, невозможно доработать без сервера
+	{
+		this.idReader = 0;
+	}
+	
+	public void testOfControlSum() //тест контрольной суммы 
+	{
+        MD5 md5 = new MD5();     
+        
+        
+        if(md5.getHash(this.temp).equals(md5.getHash(this.textOfSender))) //Проверка, совпадает ли md5 отправленного сообщения и полученного
+        {
+        	this.testOfControlSumBool = true;
+        }
+	}
+	
+	public void messageStatus() //Метод получения статуса сообщения 
+	{
+		if(this.testOfControlSumBool)
+		{
+			if (read)
+			{
+				System.out.println("Сообщение прочитано");
+				this.setDate();
+			}
+			else if(delivered)
+			{
+				System.out.println("Сообщение доставлено");
+				this.setDate();
+			}
+			else if(sent) 
+			{
+				System.out.println("Сообщение отправлено");
+				this.setDate();
+			}
+			else System.out.println("Сообщение не было отправлено. Обратитесь в службу технической поддержки.");
+		}
+		else System.out.println("Сообщение не прошло контрольную сумму");
+	}
+	
+	
+
+}
